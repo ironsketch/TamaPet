@@ -21,6 +21,8 @@ public class Pet {
     public int getDeath(){return death;}
     public int getHappy(){return happy;}
 
+    public Pet(){}
+
     public Pet(String newName, int newAge, int newHunger, int newThirst, int newHealth,
                int newDeath, int newHappy, int newAgeTime, int newAwayTime){
         name = newName;
@@ -102,8 +104,9 @@ public class Pet {
     }
 
     public void updateAwayTime(int time){
-        if((time - awayTime) / 3600 > 0){
-            int hoursAway = (time - awayTime) / 3600;
+        // 15 minutes
+        if((time - awayTime) / 900 > 0){
+            int hoursAway = (time - awayTime) / 900;
             updateHunger(-hoursAway, false);
             updateThirst(-hoursAway);
             updateHappy(-hoursAway);

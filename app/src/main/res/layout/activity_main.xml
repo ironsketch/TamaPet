@@ -4,13 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    tools:context=".MainActivity">
+    android:background="@drawable/bck_tama"
+    tools:context=".MainActivity"
+    android:paddingTop="5dp"
+    android:paddingBottom="10dp">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/creature_back">
+    </ImageView>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:id="@+id/topStuff">
+    android:id="@+id/topStuff"
+    android:background="@drawable/buttons">
     <LinearLayout
         android:layout_width="60dp"
         android:layout_height="match_parent"
@@ -157,10 +166,19 @@
     </LinearLayout>
 </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/creature1"
+        android:paddingTop="100dp"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topStuff"
-        android:id="@+id/choosePet">
+        android:id="@+id/choosePet"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center_horizontal">
         <TextView
             android:id="@+id/NewPet"
             android:layout_gravity="center_horizontal"
@@ -168,12 +186,14 @@
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
+            android:background="@color/colorPrimaryDark"
             android:textStyle="bold"
             android:textSize="20sp"
             android:textColor="@color/offWhite"/>
         <TextView
             android:id="@+id/OldPet"
             android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="15dp"
@@ -183,9 +203,12 @@
             android:textColor="@color/offWhite"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/choosePet">
+        android:layout_below="@id/choosePet"
+        android:id="@+id/DEADPET"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
         <TextView
             android:id="@+id/deadPet"
             android:layout_gravity="center_horizontal"
@@ -198,36 +221,149 @@
             android:textColor="@color/red"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/choosePet">
+        android:layout_below="@+id/DEADPET"
+        android:orientation="vertical"
+        android:id="@+id/submitlayout"
+        android:gravity="center_horizontal">
         <TextView
-            android:id="@+id/game1"
-            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:textSize="30sp"
+            android:textSize="20sp"
             android:textStyle="bold"
+            android:id="@+id/PetName"
+            android:background="@color/colorPrimaryDark"
             android:textColor="@color/offWhite"/>
-        <TextView
-            android:id="@+id/game2"
-            android:layout_gravity="center_horizontal"
+        <EditText
             android:layout_width="wrap_content"
+            android:id="@+id/nameTextBox"
             android:layout_height="wrap_content"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/offWhite"/>
+            android:ems="10"
+            android:inputType="text"
+            android:background="@drawable/buttons"
+            android:textColor="#fff">
+            <requestFocus />
+        </EditText>
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/nameButton"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons"
+            android:textColor="#fff"
+            android:text="Submit"
+            />
     </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/game1"
+                    android:background="@drawable/buttons"
+                    android:minHeight="30dp"
+                    android:minWidth="60dp"
+                    android:text="Game 1"
+                    android:textSize="12dp"
+                    android:padding="2dp"
+                    android:textColor="#fff"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/game2"
+                    android:background="@drawable/buttons"
+                    android:minHeight="30dp"
+                    android:minWidth="60dp"
+                    android:text="Game 2"
+                    android:textSize="12dp"
+                    android:padding="2dp"
+                    android:textColor="#fff"
+                    android:layout_margin="5dp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/Guessed"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/offWhite"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/Hidden"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/offWhite"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/GuessNumber"
+                android:background="@color/colorPrimaryDark"
+                android:textColor="@color/offWhite"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:id="@+id/charTextBox"
+                android:layout_height="wrap_content"
+                android:ems="1"
+                android:inputType="text"
+                android:background="@drawable/buttons"
+                android:textColor="#fff">
+            <requestFocus />
+            </EditText>
+            <EditText
+                android:layout_width="wrap_content"
+                android:id="@+id/numberTextBox"
+                android:layout_height="wrap_content"
+                android:ems="1"
+                android:inputType="number"
+                android:background="@drawable/buttons"
+                android:textColor="#fff">
+            <requestFocus />
+            </EditText>
+            <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/numberButton"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons"
+            android:textColor="#fff"
+            android:text="Guess!"
+            />
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/numberButton2"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttons"
+                android:textColor="#fff"
+                android:text="Guess!"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:orientation="horizontal"
-    android:id="@+id/bottomStuff">
+    android:id="@+id/bottomStuff"
+    android:paddingLeft="5dp"
+    android:paddingBottom="10dp">
     <Button
         android:id="@+id/mealBTN"
         android:layout_width="wrap_content"
@@ -300,5 +436,6 @@
         android:layout_margin="5dp"
         android:textStyle="bold" />
 </LinearLayout>
+
 
 </RelativeLayout>
