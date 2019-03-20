@@ -1,10 +1,12 @@
 package app.linuxduck.com.tamapet;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -25,7 +27,7 @@ import static java.lang.System.currentTimeMillis;
 
 public class MainActivity extends AppCompatActivity {
     int timeKeeper = 0;
-    Pet meow = new Pet();
+    private Pet meow = new Pet();
     private TextView feedText;
     private TextView waterText;
     private TextView ageText;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private Toast eventToast;
     private EditText numberGuessEdit;
     private EditText charGuessEdit;
+    private EditText petNameEdit;
     private Character guess;
     private ArrayList<Character> guessedLettersArr;
     private ArrayList<Character> lettersHidden;
@@ -60,9 +63,28 @@ public class MainActivity extends AppCompatActivity {
     private int guessAttempts;
     private int random;
     private int eventDuration;
-    private boolean accomplished;
+    private int duration;
+    private int creatureChoice;
+    private int resourceID;
     private View view;
     private Context context;
+
+    // Animation Initializers
+    private ArrayList<String> creatureList;
+    private ImageView waterImg;
+    private ImageView foodImg;
+    private AnimationDrawable waterAnimation;
+    private AnimationDrawable foodAnimation;
+
+    private ImageView creatureImage;
+
+    private ObjectAnimator creatureAnimator;
+    //------------------------
+
+    private Display display;
+    private Point size;
+    private int width;
+    private int height;
 
     @Override
     protected void onStart(){
@@ -73,6 +95,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // The window limits
+        display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
+
+        // Animation Stuff
+        waterImg = (ImageView)findViewById(R.id.waterBowl);
+        waterImg.setBackgroundResource(R.drawable.water_animation);
+        waterAnimation = (AnimationDrawable) waterImg.getBackground();
+
+        foodImg = (ImageView)findViewById(R.id.foodBowl);
+        foodImg.setBackgroundResource(R.drawable.food_animation);
+        foodAnimation = (AnimationDrawable) foodImg.getBackground();
+
+        creatureList = new ArrayList<>();
+        creatureList.add("tamaameba"); creatureList.add("tamabomb"); creatureList.add("tamafish"); creatureList.add("tamagross");
+        creatureList.add("tamarobot"); creatureList.add("tamascorpion"); creatureList.add("tamaship"); creatureList.add("tamasideface");
+        creatureList.add("tamasnake"); creatureList.add("tamaspekter"); creatureList.add("tamawtf"); creatureList.add("tamahive");
+        // ---------------
 
         feedText = this.findViewById(R.id.feedInfo);
         waterText = this.findViewById(R.id.waterInfo);
@@ -88,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         hiddenText = this.findViewById(R.id.Hidden);
         guessedLetters = this.findViewById(R.id.Guessed);
 
-        final EditText petNameEdit = findViewById(R.id.nameTextBox);
+        petNameEdit = findViewById(R.id.nameTextBox);
         numberGuessEdit = findViewById(R.id.numberTextBox);
         charGuessEdit = findViewById(R.id.charTextBox);
 
@@ -107,24 +151,10 @@ public class MainActivity extends AppCompatActivity {
         game1 = findViewById(R.id.game1);
         game2 = findViewById(R.id.game2);
 
-        petNameEdit.setVisibility(View.GONE);
-        numberGuessEdit.setVisibility(View.GONE);
-        charGuessEdit.setVisibility(View.GONE);
-        nameButton.setVisibility(View.GONE);
-        guessButton.setVisibility(View.GONE);
-        guessButton2.setVisibility(View.GONE);
-        hiddenText.setVisibility(View.GONE);
-        guessedLetters.setVisibility(View.GONE);
-        guessText.setVisibility(View.GONE);
-        game1.setVisibility(View.GONE);
-        game2.setVisibility(View.GONE);
-        deadPetText.setVisibility(View.GONE);
-        petNameText.setVisibility(View.GONE);
-
         context = getApplicationContext();
         CharSequence nope = "Nope!";
         CharSequence correct = "Correct!";
-        int duration = Toast.LENGTH_SHORT;
+        duration = Toast.LENGTH_SHORT;
         eventDuration = Toast.LENGTH_LONG;
 
         nopeToast = Toast.makeText(context, nope, duration);
@@ -143,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 nameButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        resetAnimations();
                         view = getCurrentFocus();
                         if (view != null) {
                             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -151,11 +182,18 @@ public class MainActivity extends AppCompatActivity {
                         petNameText.setVisibility(View.GONE);
                         petNameEdit.getText().toString();
 
+                        creatureChoice = abs((int) (Math.random() * creatureList.size()) - 1);
+                        resourceID = getResources().getIdentifier(creatureList.get(creatureChoice), "drawable", getPackageName());
+
+                        creatureImage = (ImageView)findViewById(R.id.creatureImageView);
+                        creatureImage.setBackgroundResource(resourceID);
+                        creatureImage.setVisibility(View.VISIBLE);
+
                         meow = new Pet(petNameEdit.getText().toString().toLowerCase(), 0, 50, 50, 100,
-                                0, 50, (int)(currentTimeMillis() / 1000), (int)(currentTimeMillis() / 1000), 90);
+                                0, 50, (int)(currentTimeMillis() / 1000), (int)(currentTimeMillis() / 1000), 90, creatureList.get(creatureChoice));
 
                         String petInfo = petNameEdit.getText().toString().toLowerCase() + " 0 50 50 100 0 50 " + String.valueOf((int)(currentTimeMillis() / 1000)) + " " +
-                                String.valueOf((int)(currentTimeMillis() / 1000) + " 85");
+                                String.valueOf((int)(currentTimeMillis() / 1000) + " 85 " + creatureList.get(creatureChoice));
 
                         FileOutputStream outputStream;
                         try{
@@ -193,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
                 nameButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        resetAnimations();
                         petNameText.setVisibility(View.GONE);
                         petNameEdit.getText().toString();
 
@@ -202,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                             }
-                            String[] words = new String[9];
+                            String[] words = new String[11];
                             FileInputStream petFile = openFileInput(petNameEdit.getText().toString().toLowerCase() + ".pet");
                             BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(petFile)));
                             String line;
@@ -212,8 +251,13 @@ public class MainActivity extends AppCompatActivity {
                             br.close();
                             meow = new Pet(words[0], Integer.parseInt(words[1]), Integer.parseInt(words[2]), Integer.parseInt(words[3]),
                                     Integer.parseInt(words[4]), Integer.parseInt(words[5]), Integer.parseInt(words[6]),
-                                    Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]));
+                                    Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), words[10]);
                             meow.updateAwayTime((int)(currentTimeMillis() / 1000));
+                            resourceID = getResources().getIdentifier(words[10], "drawable", getPackageName());
+
+                            creatureImage = (ImageView)findViewById(R.id.creatureImageView);
+                            creatureImage.setBackgroundResource(resourceID);
+                            creatureImage.setVisibility(View.VISIBLE);
 
                             if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
                                 eventToast = Toast.makeText(context, eventText, eventDuration);
@@ -237,6 +281,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 meow.updateHunger(15, false);
                 meow.ageUp((int)(currentTimeMillis() / 1000));
+                foodAnimation.stop();
+                foodAnimation.start();
 
                 if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
                     eventToast = Toast.makeText(context, eventText, eventDuration);
@@ -267,6 +313,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 meow.updateThirst(15);
                 meow.ageUp((int)(currentTimeMillis() / 1000));
+                waterAnimation.stop();
+                waterAnimation.start();
 
                 if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
                     eventToast = Toast.makeText(context, eventText, eventDuration);
@@ -372,7 +420,6 @@ public class MainActivity extends AppCompatActivity {
                         hiddenText.setVisibility(View.VISIBLE);
                         hiddenText.setText(hidden);
                         attempts = 6;
-                        accomplished = false;
 
                         guessButton2.setOnClickListener(new View.OnClickListener(){
                             @Override
@@ -492,12 +539,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
      public void onPause() {
         super.onPause();
-        timeKeeper = (int)(currentTimeMillis() / 1000);
+        save(meow);
     }
     @Override
     protected void onResume()
     {
         super.onResume();
+        timeKeeper = (int)(currentTimeMillis() / 1000);
         meow.updateAwayTime(timeKeeper);
         save(meow);
         ageText.setText(String.valueOf(meow.getAge()));
@@ -535,10 +583,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Save pet
     public void save(Pet meow){
+        animateCreature();
         String petInfo = meow.getName() + " " + String.valueOf(meow.getAge()) + " " + String.valueOf(meow.getHunger()) + " " +
                 String.valueOf(meow.getThirst()) + " " + String.valueOf(meow.gethealth()) + " " + String.valueOf(meow.getDeath()) + " " +
-                String.valueOf(meow.gethealth()) + " " + String.valueOf((int)(currentTimeMillis() / 1000)) + " " +
-                String.valueOf((int)(currentTimeMillis() / 1000) + " " + meow.getRandomEvent());
+                String.valueOf(meow.gethealth()) + " " + String.valueOf(meow.getAgeTime()) + " " +
+                String.valueOf((int)(currentTimeMillis() / 1000) + " " + meow.getRandomEvent() + " " + meow.getCreature());
 
         FileOutputStream outputStream;
         try{
@@ -578,5 +627,25 @@ public class MainActivity extends AppCompatActivity {
             guesses += a.get(i);
         }
         return guesses;
+    }
+
+    public void resetAnimations(){
+
+    }
+
+    public void animateCreature(){
+        int limits = findViewById(R.id.bottomStuff).getHeight() * 2;
+        int randomX = 0 + (int)(Math.random() * (width) + 1);
+        int randomY = 0 + (int)(Math.random() * (height - limits) + 1);
+        creatureAnimator = ObjectAnimator.ofFloat(creatureImage, "translationX", randomX);
+        creatureAnimator.setDuration(2000);
+        creatureAnimator.start();
+        creatureAnimator = ObjectAnimator.ofFloat(creatureImage, "translationY", randomY);
+        creatureAnimator.setDuration(2000);
+        creatureAnimator.start();
+    }
+
+    public void spinCreature(){
+
     }
 }

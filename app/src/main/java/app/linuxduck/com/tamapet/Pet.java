@@ -16,23 +16,26 @@ public class Pet {
     private int happy;
     private int ageTime;
     private int awayTime;
+    private String creature;
     private ArrayList<String> events;
 
     private int randomEvent;
 
     public String getName(){return name;}
     public int getAge(){return age;}
+    public int getAgeTime(){return ageTime;}
     public int getHunger(){return hunger;}
     public int getThirst(){return thirst;}
     public int gethealth(){return health;}
     public int getDeath(){return death;}
     public int getHappy(){return happy;}
     public int getRandomEvent(){return randomEvent;}
+    public String getCreature(){return creature;}
 
     public Pet(){}
 
     public Pet(String newName, int newAge, int newHunger, int newThirst, int newHealth,
-               int newDeath, int newHappy, int newAgeTime, int newAwayTime, int newRandomEvent){
+               int newDeath, int newHappy, int newAgeTime, int newAwayTime, int newRandomEvent, String newCreature){
         name = newName;
         age = newAge;
         hunger = newHunger;
@@ -44,6 +47,7 @@ public class Pet {
         awayTime = newAwayTime;
         randomEvent = newRandomEvent;
         events = new ArrayList<>();
+        creature = newCreature;
 
         // Fell down stairs 0
         events.add(name + " fell down some stairs! They hurt them selves and feel " +

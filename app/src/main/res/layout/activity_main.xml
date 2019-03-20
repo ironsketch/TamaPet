@@ -3,18 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bck_tama"
+    android:background="@drawable/background1"
     tools:context=".MainActivity">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/creatureImageView"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/foodBowl"
+        android:layout_above="@id/bottomStuff"
+        android:layout_margin="20sp"
+        android:background="@drawable/food1"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/waterBowl"
+        android:layout_above="@id/bottomStuff"
+        android:layout_toRightOf="@id/foodBowl"
+        android:layout_margin="20sp"
+        android:background="@drawable/water1"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/creature_image"
-            android:background="@drawable/creature" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
@@ -215,6 +229,7 @@
                         android:padding="15dp"
                         android:background="@drawable/txtbox"
                         android:text="DEAD PET :("
+                        android:visibility="gone"
                         android:textSize="23sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorPrimaryDark"/>
@@ -241,6 +256,7 @@
                 android:textStyle="bold"
                 android:id="@+id/PetName"
                 android:text="Pet Name"
+                android:visibility="gone"
                 android:textColor="@color/offWhite"/>
 
             <EditText
@@ -250,6 +266,7 @@
                 android:padding="5dp"
                 android:background="@drawable/txtbox"
                 android:ems="10"
+                android:visibility="gone"
                 android:inputType="text"
                 android:textColor="#fff">
                 <requestFocus />
@@ -262,6 +279,7 @@
                 android:id="@+id/nameButton"
                 android:textColor="#fff"
                 android:textSize="12dp"
+                android:visibility="gone"
                 android:text="Submit" />
         </LinearLayout>
         <LinearLayout
@@ -284,12 +302,14 @@
                     android:textSize="12dp"
                     android:padding="2dp"
                     android:textColor="#fff"
+                    android:visibility="gone"
                     android:layout_margin="5dp"
                     android:textStyle="bold"
                     />
                 <Button
                     android:id="@+id/game2"
                     android:layout_width="55dp"
+                    android:visibility="gone"
                     android:layout_height="35dp"
                     android:background="@drawable/txtbox"
                     android:minHeight="30dp"
@@ -313,6 +333,7 @@
                     android:textStyle="bold"
                     android:padding="5dp"
                     android:id="@+id/Guessed"
+                    android:visibility="gone"
                     android:layout_gravity="center_horizontal"
                     android:background="@color/hang"
                     android:textColor="@color/offWhite"
@@ -321,6 +342,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
+                    android:visibility="gone"
                     android:textStyle="bold"
                     android:background="@color/hang"
                     android:padding="5dp"
@@ -333,6 +355,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    android:visibility="gone"
                     android:background="@color/hang"
                     android:padding="5dp"
                     android:id="@+id/GuessNumber"
@@ -354,6 +377,7 @@
                         android:id="@+id/charTextBox"
                         android:layout_height="wrap_content"
                         android:ems="1"
+                        android:visibility="gone"
                         android:background="@color/hang"
                         android:inputType="text"
                         android:textColor="#fff">
@@ -363,6 +387,7 @@
                         android:layout_width="80dp"
                         android:layout_height="50dp"
                         android:padding="15dp"
+                        android:visibility="gone"
                         android:textSize="15dp"
                         android:background="@drawable/txtbox"
                         android:id="@+id/numberButton"
@@ -379,6 +404,7 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:id="@+id/numberTextBox"
+                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:ems="1"
                         android:background="@color/hang"
@@ -389,6 +415,7 @@
                     <Button
                         android:layout_width="80dp"
                         android:layout_height="50dp"
+                        android:visibility="gone"
                         android:padding="15dp"
                         android:textSize="15dp"
                         android:background="@drawable/txtbox"
@@ -401,8 +428,8 @@
         </LinearLayout>
     </LinearLayout>
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="130dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:id="@+id/bottomStuff"
             android:orientation="horizontal"
@@ -410,8 +437,8 @@
             android:background="@drawable/bottominfo">
             <Button
                 android:id="@+id/mealBTN"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/meal"
                 android:minHeight="30dp"
                 android:minWidth="50dp"
@@ -420,40 +447,40 @@
                 android:textSize="12dp" />
             <Button
                 android:id="@+id/treatBTN"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/treat"
                 android:layout_gravity="bottom"
                 android:minHeight="30dp"
                 android:minWidth="60dp"/>
             <Button
                 android:id="@+id/waterBTN"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/water"
                 android:layout_gravity="bottom"
                 android:minHeight="30dp"
                 android:minWidth="60dp"/>
             <Button
                 android:id="@+id/playBTN"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/play"
                 android:layout_gravity="bottom"
                 android:minHeight="30dp"
                 android:minWidth="60dp" />
             <Button
                 android:id="@+id/PunishBTN"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/punish"
                 android:layout_gravity="bottom"
                 android:minHeight="30dp"
                 android:minWidth="60dp" />
             <Button
                 android:id="@+id/shotBTN"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/shot"
                 android:layout_gravity="bottom"
                 android:minHeight="30dp"
