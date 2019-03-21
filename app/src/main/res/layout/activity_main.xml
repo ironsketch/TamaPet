@@ -2,13 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/alleverything"
     android:layout_height="match_parent"
     android:background="@drawable/background1"
     tools:context=".MainActivity">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/creatureImageView"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,6 +21,33 @@
         android:layout_toRightOf="@id/foodBowl"
         android:layout_margin="20sp"
         android:background="@drawable/water1"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/creatureImageView"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/savecreature"
+        android:layout_above="@id/bottomStuff"
+        android:background="@drawable/savedcreatures"
+        android:layout_margin="15sp"
+        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bone"
+        android:layout_toLeftOf="@id/savecreature"
+        android:layout_above="@id/bottomStuff"
+        android:background="@drawable/bone0"
+        android:layout_margin="15sp"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/heart"
+        android:background="@drawable/heart"
+        android:visibility="gone"
+        android:layout_margin="10sp"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -236,6 +260,13 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/petList"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
+    </LinearLayout>
         <LinearLayout
             android:id="@+id/DEADPET"
             android:layout_width="wrap_content"
