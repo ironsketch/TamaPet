@@ -92,6 +92,33 @@ public class Pet {
         // Stubbed toe 12
         events.add(name + " stubbed their toe. Ouch! health (-2)");
 
+        // Got lost 13
+        events.add(name + " got lost on their way to school... happy (-5)");
+
+        // Tried to make a cake 14
+        events.add(name + " tried to make a cake and got flower and chocolate everywhere! happy (+5)");
+
+        // Failed at something new 15
+        events.add(name + " tried to learn something new but failed :( happy (-5)");
+
+        // Succeeded at learning something new! 16
+        events.add(name + " succeeded at learning something new!! happy (+10)");
+
+        // Tried to hack the pentagon 17
+        events.add(name + " tried to hack the pentagon but failed... happy (-20)");
+
+        // Tried to learn binary exploitation 18
+        events.add(name + " tried to teach them self binary exploitation. That's hard! happy (+10)");
+
+        // Went for a walk 19
+        events.add(name + " went for a walk in the park with the sun shining. happy (+10)");
+
+        // Went for a walk2 20
+        events.add(name + " went for a walk in the park in the rain! happy (+20)");
+
+        // Worms 21
+        events.add(name + " ate worms because nobody likes them. happy (-20) and health (-20)");
+
     }
     public void updateRandomEvent(){
         randomEvent--;
@@ -131,8 +158,12 @@ public class Pet {
         if(health + heal > 100)
             health = 100;
         else if(health + heal <= 0) {
+            if(heal < 0){
+                updateDeath(heal);
+            } else {
+                updateDeath();
+            }
             health = 0;
-            updateDeath();
         }
         else
             health += heal;
@@ -142,10 +173,20 @@ public class Pet {
         if(death + DEATH_COST > 100) {
             death = 100;
         }
-        else if(death + DEATH_COST < 0){
+        else if(death + DEATH_COST <= 0){
             death = 0;
         } else {
             death += DEATH_COST;
+        }
+    }
+    public void updateDeath(int major){
+        if(death + major > 100) {
+            death = 100;
+        }
+        else if(death + major <= 0){
+            death = 0;
+        } else {
+            death += major;
         }
     }
 
@@ -153,8 +194,12 @@ public class Pet {
         if(happy + gameCost > 100){
             happy = 100;
         } else if(happy + gameCost <= 0){
+            if(gameCost < 0){
+                updateHealth(-(abs(happy + gameCost)));
+            } else {
+                updateHealth(-2);
+            }
             happy = 0;
-            updateHealth(-2);
         } else {
             happy += gameCost;
         }
@@ -162,6 +207,7 @@ public class Pet {
 
     public void giveShot(){
         updateHealth(SHOT_COST);
+        updateHappy(-60);
     }
 
     public void updateAwayTime(int time){
@@ -224,6 +270,25 @@ public class Pet {
             updateHappy(-10);
         } else if(randomEvent == 12){
             updateHealth(-2);
+        } else if(randomEvent == 13){
+            updateHappy(-5);
+        } else if(randomEvent == 14){
+            updateHappy(5);
+        } else if(randomEvent == 15){
+            updateHappy(-5);
+        } else if(randomEvent == 16){
+            updateHappy(10);
+        } else if(randomEvent == 17){
+            updateHappy(-20);
+        } else if(randomEvent == 18){
+            updateHappy(10);
+        } else if(randomEvent == 19){
+            updateHappy(10);
+        } else if(randomEvent == 20){
+            updateHappy(20);
+        } else if(randomEvent == 21){
+            updateHappy(-20);
+            updateHealth(-20);
         }
         return events.get(randomEvent);
     }

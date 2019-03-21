@@ -9,6 +9,24 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/feather"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/feather"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="100sp"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ball"
+        android:background="@drawable/ball"
+        android:visibility="gone"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="50sp"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/foodBowl"
         android:layout_above="@id/bottomStuff"
         android:layout_margin="20sp"
@@ -28,10 +46,27 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/featherBUTT"
+        android:background="@drawable/featherbutt"
+        android:layout_above="@id/ballBUTT"
+        android:layout_marginRight="17sp"
+        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ballBUTT"
+        android:background="@drawable/ballbutt"
+        android:layout_above="@id/savecreature"
+        android:layout_marginRight="17sp"
+        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/savecreature"
         android:layout_above="@id/bottomStuff"
         android:background="@drawable/savedcreatures"
-        android:layout_margin="15sp"
+        android:layout_marginRight="15sp"
+        android:layout_marginBottom="15sp"
         android:layout_alignParentRight="true"/>
     <ImageView
         android:layout_width="wrap_content"
@@ -45,8 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/heart"
-        android:background="@drawable/heart"
-        android:visibility="gone"
+        android:background="@drawable/heart0"
         android:layout_margin="10sp"/>
     <LinearLayout
         android:layout_width="match_parent"
