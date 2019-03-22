@@ -46,6 +46,23 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/nomusicBUTT"
+        android:visibility="gone"
+        android:background="@drawable/nomusic"
+        android:layout_above="@id/featherBUTT"
+        android:layout_marginRight="17sp"
+        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/musicBUTT"
+        android:background="@drawable/music"
+        android:layout_above="@id/featherBUTT"
+        android:layout_marginRight="17sp"
+        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/featherBUTT"
         android:background="@drawable/featherbutt"
         android:layout_above="@id/ballBUTT"
@@ -551,4 +568,12 @@
                 android:minHeight="30dp"
                 android:minWidth="60dp" />
         </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/creatureName"
+        android:layout_above="@id/bottomStuff"
+        android:layout_marginBottom="-12sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"/>
 </RelativeLayout>
