@@ -1,5 +1,7 @@
 package app.linuxduck.com.tamapet;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import static java.lang.Math.abs;
@@ -160,6 +162,7 @@ public class Pet {
         else if(health + heal <= 0) {
             if(heal < 0){
                 updateDeath(heal);
+                Log.e("health","update");
             } else {
                 updateDeath();
             }
@@ -213,7 +216,7 @@ public class Pet {
     public void updateAwayTime(int time){
         // 15 minutes
         if((time - awayTime) / 900 > 0){
-            int hoursAway = (time - awayTime) / 900;
+            int hoursAway = (time - awayTime) / 150;//900;
             updateHunger(-hoursAway, false);
             updateThirst(-hoursAway);
             updateHappy(-hoursAway);

@@ -1,18 +1,22 @@
 package app.linuxduck.com.tamapet;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,86 +36,137 @@ import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;
 
 public class MainActivity extends AppCompatActivity {
-    int timeKeeper = 0;
-    private Pet meow = new Pet();
-    private TextView feedText;
-    private TextView waterText;
-    private TextView ageText;
-    private TextView happyText;
-    private TextView healthText;
-    private TextView deathText;
-    private TextView newPetText;
-    private TextView oldPetText;
-    private TextView deadPetText;
-    private TextView petNameText;
-    private TextView guessText;
-    private TextView hiddenText;
-    private TextView guessedLetters;
-    private TextView creatureName;
-    private Button nameButton;
-    private Button guessButton;
-    private Button guessButton2;
-    private Button game1;
-    private Button game2;
-    private Toast nopeToast;
-    private Toast correctToast;
-    private Toast eventToast;
-    private EditText numberGuessEdit;
-    private EditText charGuessEdit;
-    private EditText petNameEdit;
-    private Character guess;
-    private ArrayList<Character> guessedLettersArr;
-    private ArrayList<Character> lettersHidden;
-    private ArrayList<String> words;
-    private String hidden;
-    private String word;
-    private CharSequence eventText;
-    private CharSequence name;
-    private int attempts;
-    private int guessAttempts;
+
+    // Initializations
+    // ---------------
+    // Pet
+    private Pet myPet;
+
+    // Ints
+    private int timeKeeper;
+    private int gameAttempts;
     private int random;
-    private int eventDuration;
-    private int duration;
+    private int SHORTduration;
+    private int LONGduration;
     private int creatureChoice;
     private int resourceID;
-    private View view;
-    private Context context;
-    private LinearLayout linearLayout;
-    private ImageView savedCreatures;
-    private boolean saveWasOpened;
-    private boolean featherClicked;
-    private boolean ballClicked;
-    private boolean soundornot;
+    private int width;
+    private int height;
+
+    // Floats
+    private float objX;
+    private float objY;
+
+    //TextViews
+    private TextView hungerIntText;
+    private TextView waterIntText;
+    private TextView ageIntText;
+    private TextView happyIntText;
+    private TextView healthIntText;
+    private TextView deathIntText;
+    private TextView nameYourNewPetText;
+    private TextView deadPetText;
+    private TextView guessANumberText;
+    private TextView alreadyGuessedLettersText;
+    private TextView hiddenWordText;
+    private TextView guessALetterText;
+    private TextView loadedPetNameText;
+
+    // Buttons
+    private Button gameOneButton;
+    private Button gameTwoButton;
+    private Button listOfPetsButton;
+    private Button createNewPetButton;
+    private Button openOldPetButton;
+    private Button submitButton;
+
+    // ImageButtons
+    private ImageButton featherImageButton;
+    private ImageButton ballImageButton;
+    private ImageButton soundImageButton;
+    private ImageButton savedCreaturesImageButton;
+    private ImageButton mealImageButton;
+    private ImageButton treatImageButton;
+    private ImageButton waterImageButton;
+    private ImageButton playImageButton;
+    private ImageButton punishImageButton;
+    private ImageButton shotImageButton;
+
+    // EditTexts
+    private EditText numberEditText;
+    private EditText letterEditText;
+    private EditText nameEditText;
+
+    // Characters
+    Character characterGuess;
+
+    // CharSequences
+    private CharSequence name;
+
+    // Strings
+    private String hiddenWordString;
+    private String randomlyChoseWord;
+    private String eventText;
+    private String word;
+
+    // Booleans
+    private boolean saveButtonWasOpened;
+    private boolean featherWasClicked;
+    private boolean ballWasClicked;
+    private boolean soundORnot;
+    private boolean loaded;
+    private boolean first;
+    private boolean second;
+
+    // ImageViews
+    private ImageView creatureImage;
+    private ImageView currentCreatureImg;
     private ImageView featherImg;
     private ImageView ballImg;
-    private ImageView featherButton;
-    private ImageView ballButton;
-    private ImageView musicOnImg;
-    private ImageView musicOffImg;
-    private MediaPlayer catpurr;
-    private MediaPlayer drinking;
-    private MediaPlayer eating;
-
-    // Animation Initializers
-    private ArrayList<String> creatureList;
     private ImageView waterImg;
     private ImageView foodImg;
     private ImageView treatImg;
     private ImageView heartImage;
+
+    // Views
+    private View view;
+
+    // Contexts
+    private Context context;
+
+    // MediaPlayers
+    private MediaPlayer catpurrSound;
+    private MediaPlayer drinkingSound;
+    private MediaPlayer eatingSound;
+
+    // LinearLayouts
+    private LinearLayout linearLayout;
+
+    // ArrayLists
+    private ArrayList<Character> guessedLettersArr;
+    private ArrayList<Character> lettersHidden;
+    private ArrayList<String> words;
+    private ArrayList<String> creatureList;
+
+    // AnimationDrawables
     private AnimationDrawable waterAnimation;
     private AnimationDrawable foodAnimation;
     private AnimationDrawable treatAnimation;
     private AnimationDrawable heartAnimation;
 
-    private ImageView creatureImage;
-
-    private ObjectAnimator creatureAnimator;
-    //------------------------
-
+    // Displays
     private Display display;
+
+    // Points
     private Point size;
-    private int width;
-    private int height;
+
+    // ObjectAnimators
+    private ObjectAnimator creatureAnimator;
+
+    // Toasts
+    Toast eventToast;
+    Toast nopeToast;
+    Toast correctToast;
 
     @Override
     protected void onStart(){
@@ -123,38 +178,95 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        settings();
+        // Pet
+        myPet = new Pet();
 
-        saveWasOpened = false;
-        featherClicked = false;
-        ballClicked = false;
-
-        // The window limits
-        display = getWindowManager().getDefaultDisplay();
+        // Displays
         size = new Point();
+        display = getWindowManager().getDefaultDisplay();
         display.getSize(size);
+
+        // Ints
         width = size.x;
         height = size.y;
+        SHORTduration = Toast.LENGTH_SHORT;
+        LONGduration = Toast.LENGTH_LONG;
 
-        savedCreatures = (ImageView)findViewById(R.id.savecreature);
+        // TextViews
+        hungerIntText = findViewById(R.id.hungerinttext);
+        waterIntText = findViewById(R.id.waterinttext);
+        ageIntText = findViewById(R.id.ageinttext);
+        happyIntText = findViewById(R.id.happyinttext);
+        healthIntText = findViewById(R.id.healthinttext);
+        deathIntText = findViewById(R.id.deathinttext);
+        nameYourNewPetText = findViewById(R.id.nameyournewpettext);
+        deadPetText = findViewById(R.id.deadpettext);
+        guessANumberText = findViewById(R.id.guessanumbertext);
+        alreadyGuessedLettersText = findViewById(R.id.alreadyguessedletters);
+        hiddenWordText = findViewById(R.id.hiddenword);
+        guessALetterText = findViewById(R.id.guessaletter);
+        loadedPetNameText = findViewById(R.id.loadedpetname);
 
-        // Animation Stuff
-        waterImg = (ImageView)findViewById(R.id.waterBowl);
+        // Buttons
+        gameOneButton = findViewById(R.id.gameonebutton);
+        gameTwoButton = findViewById(R.id.gametwobutton);
+        listOfPetsButton = findViewById(R.id.listofpets);
+        createNewPetButton = findViewById(R.id.createnewpetbutton);
+        openOldPetButton = findViewById(R.id.openoldpetbutton);
+        submitButton = findViewById(R.id.submit);
+
+        // ImageButton
+        featherImageButton = findViewById(R.id.featherimagebutton);
+        ballImageButton = findViewById(R.id.ballimagebutton);
+        soundImageButton = findViewById(R.id.soundimagebutton);
+        savedCreaturesImageButton = findViewById(R.id.savedcreaturesimagebutton);
+        mealImageButton = findViewById(R.id.mealbutton);
+        treatImageButton = findViewById(R.id.treatbutton);
+        waterImageButton = findViewById(R.id.waterbutton);
+        playImageButton = findViewById(R.id.playbutton);
+        punishImageButton = findViewById(R.id.punishbutton);
+        shotImageButton = findViewById(R.id.shotbutton);
+
+        // EditTexts
+        nameEditText = findViewById(R.id.nameedittext);
+        numberEditText = findViewById(R.id.numberedittext);
+        letterEditText = findViewById(R.id.letteredittext);
+
+        // Booleans
+        saveButtonWasOpened = false;
+        soundORnot = false;
+        featherWasClicked = false;
+        ballWasClicked = false;
+        loaded = false;
+        first = true;
+        second = true;
+
+        // ImageViews
+        waterImg = findViewById(R.id.waterbowl);
         waterImg.setBackgroundResource(R.drawable.water_animation);
-        waterAnimation = (AnimationDrawable) waterImg.getBackground();
-
-        foodImg = (ImageView)findViewById(R.id.foodBowl);
+        foodImg = findViewById(R.id.foodbowl);
         foodImg.setBackgroundResource(R.drawable.food_animation);
-        foodAnimation = (AnimationDrawable) foodImg.getBackground();
-
-        treatImg = (ImageView)findViewById(R.id.bone);
+        treatImg = findViewById(R.id.bonetreat);
         treatImg.setBackgroundResource(R.drawable.treat_animation);
-        treatAnimation = (AnimationDrawable) treatImg.getBackground();
-
-        heartImage = (ImageView)findViewById(R.id.heart);
+        heartImage = findViewById(R.id.heartimageview);
         heartImage.setBackgroundResource(R.drawable.heart_animation);
-        heartAnimation = (AnimationDrawable) heartImage.getBackground();
+        heartImage.setVisibility(View.VISIBLE);
+        creatureImage = findViewById(R.id.creatureimageview);
+        featherImg = findViewById(R.id.feather);
+        ballImg = findViewById(R.id.ball);
 
+        // Contexts
+        context = getApplicationContext();
+
+        // MediaPlayers
+        catpurrSound = MediaPlayer.create(this, R.raw.purr);
+        drinkingSound = MediaPlayer.create(this, R.raw.drinking);
+        eatingSound = MediaPlayer.create(this, R.raw.eating);
+
+        // LinearLayouts
+        linearLayout = findViewById(R.id.linearlayoutlistofpets);
+
+        // ArrayLists
         creatureList = new ArrayList<>();
         creatureList.add("tamaameba"); creatureList.add("tamabomb"); creatureList.add("tamachip"); creatureList.add("tamaeyeturtle");
         creatureList.add("tamafish"); creatureList.add("tamaghost"); creatureList.add("tamagross"); creatureList.add("tamahive");
@@ -163,142 +275,77 @@ public class MainActivity extends AppCompatActivity {
         creatureList.add("tamasideface"); creatureList.add("tamasierpinskitriangle"); creatureList.add("tamasnake"); creatureList.add("tamaspekter");
         creatureList.add("tamaspidereyeball"); creatureList.add("tamasquiggle"); creatureList.add("tamawtf");
 
-        creatureImage = (ImageView)findViewById(R.id.creatureImageView);
-        // ---------------
+        // AnimationDrawables
+        waterAnimation = (AnimationDrawable) waterImg.getBackground();
+        foodAnimation = (AnimationDrawable) foodImg.getBackground();
+        treatAnimation = (AnimationDrawable) treatImg.getBackground();
+        heartAnimation = (AnimationDrawable) heartImage.getBackground();
 
-        feedText = this.findViewById(R.id.feedInfo);
-        waterText = this.findViewById(R.id.waterInfo);
-        ageText = this.findViewById(R.id.ageInfo);
-        happyText = this.findViewById(R.id.happyInfo);
-        healthText = this.findViewById(R.id.healthInfo);
-        deathText = this.findViewById(R.id.deathInfo);
-        newPetText = this.findViewById(R.id.NewPet);
-        oldPetText = this.findViewById(R.id.OldPet);
-        deadPetText = this.findViewById(R.id.deadPet);
-        petNameText = this.findViewById(R.id.PetName);
-        guessText = this.findViewById(R.id.GuessNumber);
-        hiddenText = this.findViewById(R.id.Hidden);
-        guessedLetters = this.findViewById(R.id.Guessed);
-        creatureName = this.findViewById(R.id.creatureName);
+        // ObjectAnimators
 
-        petNameEdit = findViewById(R.id.nameTextBox);
-        numberGuessEdit = findViewById(R.id.numberTextBox);
-        charGuessEdit = findViewById(R.id.charTextBox);
+        // Toasts
+        nopeToast = Toast.makeText(context, context.getString(R.string.nope), SHORTduration);
+        correctToast = Toast.makeText(context, context.getString(R.string.correct), SHORTduration);
 
-        newPetText.setVisibility(View.VISIBLE);
-        oldPetText.setVisibility(View.VISIBLE);
+        // More settings to set
+        display.getSize(size);
 
-        Button meal = findViewById(R.id.mealBTN);
-        Button treat = findViewById(R.id.treatBTN);
-        Button water = findViewById(R.id.waterBTN);
-        Button play = findViewById(R.id.playBTN);
-        Button punish = findViewById(R.id.PunishBTN);
-        Button shot = findViewById(R.id.shotBTN);
-        guessButton = findViewById(R.id.numberButton);
-        guessButton2 = findViewById(R.id.numberButton2);
-        nameButton = findViewById(R.id.nameButton);
-        game1 = findViewById(R.id.game1);
-        game2 = findViewById(R.id.game2);
+        settings();
 
-        featherButton = findViewById(R.id.featherBUTT);
-        ballButton = findViewById(R.id.ballBUTT);
-        featherImg = findViewById(R.id.feather);
-        ballImg = findViewById(R.id.ball);
+        findViewById(R.id.mainall).setOnTouchListener(handleTouch);
 
-        context = getApplicationContext();
-        CharSequence nope = "Nope!";
-        CharSequence correct = "Correct!";
-        duration = Toast.LENGTH_SHORT;
-        eventDuration = Toast.LENGTH_LONG;
-
-        nopeToast = Toast.makeText(context, nope, duration);
-        correctToast = Toast.makeText(context, correct, duration);
-
-        linearLayout = findViewById(R.id.petList);
-
-        findViewById(R.id.alleverything).setOnTouchListener(handleTouch);
-
-        musicOffImg.setOnClickListener(new View.OnClickListener() {
+        soundImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!soundornot) {
-                    catpurr.setVolume(1.0f,1.0f);
-                    drinking.setVolume(0.4f,0.4f);
-                    eating.setVolume(0.4f,0.4f);
-                    musicOnImg.setVisibility(View.VISIBLE);
-                    musicOffImg.setVisibility(View.GONE);
-                    FileOutputStream outputStream;
-                    try{
-                        outputStream = openFileOutput("settings", Context.MODE_PRIVATE);
-                        outputStream.write("true".getBytes());
-                        outputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    soundornot = true;
-                }
+                changeSound();
             }
         });
 
-        musicOnImg.setOnClickListener(new View.OnClickListener() {
+        featherImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(soundornot) {
-                    catpurr.setVolume(0.0f,0.0f);
-                    drinking.setVolume(0.0f,0.0f);
-                    eating.setVolume(0.0f,0.0f);
-                    musicOnImg.setVisibility(View.GONE);
-                    musicOffImg.setVisibility(View.VISIBLE);
-                    FileOutputStream outputStream;
-                    try{
-                        outputStream = openFileOutput("settings", Context.MODE_PRIVATE);
-                        outputStream.write("false".getBytes());
-                        outputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                turnOffEverything();
+                if(!featherWasClicked && loaded) {
+                    if(!first) {
+                        objX = featherImg.getX();
+                        objY = featherImg.getY();
+                    } else {
+                        objX = width * 0.8f;
+                        objY = height / 2f;
                     }
-                    soundornot = false;
-                }
-            }
-        });
-
-        featherButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!featherClicked) {
-                    meow.updateHappy(2);
+                    myPet.updateHappy(2);
                     featherImg.setVisibility(View.VISIBLE);
-                    animateCreature(featherImg.getX(), featherImg.getY());
-                    featherClicked = true;
-                    if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                        eventToast = Toast.makeText(context, eventText, eventDuration);
-                        eventToast.show();
-                    }
-                    handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                    save(meow);
+                    animateCreature(objX, objY);
+                    featherWasClicked = true;
+                    updateGame();
+                    first = false;
                 } else {
-                    featherClicked = false;
+                    featherWasClicked = false;
                     featherImg.setVisibility(View.GONE);
                 }
             }
         });
 
-        ballButton.setOnClickListener(new View.OnClickListener() {
+        ballImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!ballClicked) {
-                    meow.updateHappy(2);
-                    ballImg.setVisibility(View.VISIBLE);
-                    animateCreature(ballImg.getX(), ballImg.getY());
-                    ballClicked = true;
-                    if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                        eventToast = Toast.makeText(context, eventText, eventDuration);
-                        eventToast.show();
+                turnOffEverything();
+                if(!ballWasClicked) {
+                    if(!second) {
+                        objX = ballImg.getX();
+                        objY = ballImg.getY();
+                    } else {
+                        objX = width * .2f;
+                        objY = height / 2f;
                     }
-                    handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                    save(meow);
+                    myPet.updateHappy(2);
+                    ballImg.setVisibility(View.VISIBLE);
+                    animateCreature(objX, objY);
+                    ballWasClicked = true;
+                    updateGame();
+                    second = false;
                 } else {
-                    ballClicked = false;
+                    ballWasClicked = false;
                     ballImg.setVisibility(View.GONE);
                 }
             }
@@ -307,59 +354,58 @@ public class MainActivity extends AppCompatActivity {
         creatureImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                catpurr.start();
                 heartImage.setX(creatureImage.getX());
                 heartImage.setY(creatureImage.getY());
-                meow.updateHappy(2);
+                myPet.updateHappy(2);
                 heartAnimation.stop();
                 heartAnimation.start();
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
-                }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
+                catpurrSound.start();
+                updateGame();
             }
         });
 
-        savedCreatures.setOnClickListener(new View.OnClickListener() {
+        savedCreaturesImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                turnOffEverything();
                 linearLayout.removeAllViewsInLayout();
-                if(!saveWasOpened) {
-                    newPetText.setVisibility(View.VISIBLE);
-                    oldPetText.setVisibility(View.VISIBLE);
-                    petNameText.setVisibility(View.GONE);
+                if(!saveButtonWasOpened) {
+                    createNewPetButton.setVisibility(View.VISIBLE);
+                    openOldPetButton.setVisibility(View.VISIBLE);
+                    loadedPetNameText.setVisibility(View.GONE);
                     deadPetText.setVisibility(View.GONE);
-                    petNameEdit.setVisibility(View.GONE);
-                    nameButton.setVisibility(View.GONE);
-                    saveWasOpened = true;
+                    nameEditText.setVisibility(View.GONE);
+                    submitButton.setVisibility(View.GONE);
+                    saveButtonWasOpened = true;
+                    turnOffEverything();
                 } else {
-                    newPetText.setVisibility(View.GONE);
-                    petNameText.setVisibility(View.GONE);
-                    oldPetText.setVisibility(View.GONE);
+                    createNewPetButton.setVisibility(View.GONE);
+                    openOldPetButton.setVisibility(View.GONE);
+                    loadedPetNameText.setVisibility(View.GONE);
                     deadPetText.setVisibility(View.GONE);
-                    petNameEdit.setVisibility(View.GONE);
-                    nameButton.setVisibility(View.GONE);
+                    nameEditText.setVisibility(View.GONE);
+                    submitButton.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.GONE);
-                    saveWasOpened = false;
+                    saveButtonWasOpened = false;
+                    turnOffEverything();
                 }
             }
         });
 
-        newPetText.setOnClickListener(new View.OnClickListener() {
+        createNewPetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
+                turnOffEverything();
                 linearLayout.removeAllViewsInLayout();
                 deadPetText.setVisibility(View.GONE);
-                petNameEdit.setVisibility(View.VISIBLE);
-                nameButton.setVisibility(View.VISIBLE);
-                petNameText.setVisibility(View.VISIBLE);
-                newPetText.setVisibility(View.GONE);
-                oldPetText.setVisibility(View.GONE);
-                saveWasOpened = false;
+                nameEditText.setVisibility(View.VISIBLE);
+                submitButton.setVisibility(View.VISIBLE);
+                nameYourNewPetText.setVisibility(View.VISIBLE);
+                createNewPetButton.setVisibility(View.GONE);
+                openOldPetButton.setVisibility(View.GONE);
+                saveButtonWasOpened = false;
 
-                nameButton.setOnClickListener(new View.OnClickListener() {
+                submitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         view = getCurrentFocus();
@@ -367,8 +413,11 @@ public class MainActivity extends AppCompatActivity {
                             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                         }
-                        petNameText.setVisibility(View.GONE);
-                        petNameEdit.getText().toString();
+                        createNewPetButton.setVisibility(View.GONE);
+                        openOldPetButton.setVisibility(View.GONE);
+                        submitButton.setVisibility(View.GONE);
+                        nameEditText.setVisibility(View.GONE);
+                        nameEditText.getText().toString();
 
                         creatureChoice = abs((int) (Math.random() * creatureList.size()) - 1);
                         resourceID = getResources().getIdentifier(creatureList.get(creatureChoice), "drawable", getPackageName());
@@ -377,403 +426,367 @@ public class MainActivity extends AppCompatActivity {
                         creatureImage.setVisibility(View.VISIBLE);
 
 
-                        meow = new Pet(petNameEdit.getText().toString().toLowerCase().replace(" ", "_"), 0, 50, 50, 100,
+                        myPet = new Pet(nameEditText.getText().toString().toLowerCase().replace(" ", "_"), 0, 50, 50, 100,
                                 0, 50, (int)(currentTimeMillis() / 1000), (int)(currentTimeMillis() / 1000), 90, creatureList.get(creatureChoice));
 
-                        String petInfo = petNameEdit.getText().toString().toLowerCase().replace(" ", "_") + " 0 50 50 100 0 50 " + String.valueOf((int)(currentTimeMillis() / 1000)) + " " +
+                        String petInfo = nameEditText.getText().toString().toLowerCase().replace(" ", "_") + " 0 50 50 100 0 50 " + String.valueOf((int)(currentTimeMillis() / 1000)) + " " +
                                 String.valueOf((int)(currentTimeMillis() / 1000) + " 85 " + creatureList.get(creatureChoice));
-
+                        loaded = true;
                         FileOutputStream outputStream;
                         try{
-                            outputStream = openFileOutput(petNameEdit.getText().toString().toLowerCase().replace(" ", "_") + ".pet", Context.MODE_PRIVATE);
+                            outputStream = openFileOutput(nameEditText.getText().toString().toLowerCase().replace(" ", "_") + ".pet", Context.MODE_PRIVATE);
                             outputStream.write(petInfo.getBytes());
                             outputStream.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
 
-                        if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                            eventToast = Toast.makeText(context, eventText, eventDuration);
-                            eventToast.show();
-                        }
-                        petNameEdit.setVisibility(View.GONE);
-                        nameButton.setVisibility(View.GONE);
-                        newPetText.setVisibility(View.GONE);
-                        oldPetText.setVisibility(View.GONE);
-                        creatureName.setText(meow.getName().replace("_", " "));
+                        updateGame();
+
+                        loadedPetNameText.setText(myPet.getName().replace("_", " "));
                         view = getCurrentFocus();
+                        nameYourNewPetText.setVisibility(View.GONE);
+
                     }
                 });
             }
         });
-        oldPetText.setOnClickListener(new View.OnClickListener(){
+
+        openOldPetButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                saveButtonWasOpened = false;
                 deadPetText.setVisibility(View.GONE);
-                newPetText.setVisibility(View.GONE);
-                oldPetText.setVisibility(View.GONE);
-                petNameText.setVisibility(View.GONE);
+                createNewPetButton.setVisibility(View.GONE);
+                openOldPetButton.setVisibility(View.GONE);
+                loadedPetNameText.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
-                saveWasOpened = false;
+                turnOffEverything();
                 choosePet();
             }
         });
-        meal.setOnClickListener(new View.OnClickListener() {
+        mealImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game1.setVisibility(View.GONE);
-                game2.setVisibility(View.GONE);
-                meow.updateHunger(15, false);
-                meow.ageUp((int)(currentTimeMillis() / 1000));
-                foodAnimation.stop();
-                foodAnimation.start();
-                animateCreature(foodImg.getX(), foodImg.getY());
-                eating.start();
-
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
+                if(loaded) {
+                    myPet.updateHunger(15, false);
+                    myPet.ageUp((int) (currentTimeMillis() / 1000));
+                    foodAnimation.stop();
+                    foodAnimation.start();
+                    animateCreature(foodImg.getX(), foodImg.getY());
+                    eatingSound.start();
+                    turnOffEverything();
+                    updateGame();
                 }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
             }
         });
-        treat.setOnClickListener(new View.OnClickListener() {
+        treatImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game1.setVisibility(View.GONE);
-                game2.setVisibility(View.GONE);
-                treatAnimation.stop();
-                treatAnimation.start();
-                animateCreature(treatImg.getX(), treatImg.getY());
-                eating.start();
-                meow.updateHunger(30, true);
-                meow.updateHealth(-5);
-                meow.updateHappy(10);
-                meow.ageUp((int)(currentTimeMillis() / 1000));
-
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
+                if(loaded) {
+                    treatAnimation.stop();
+                    treatAnimation.start();
+                    animateCreature(treatImg.getX(), treatImg.getY());
+                    eatingSound.start();
+                    myPet.updateHunger(30, true);
+                    myPet.updateHealth(-5);
+                    myPet.updateHappy(10);
+                    turnOffEverything();
+                    updateGame();
                 }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
             }
         });
-        water.setOnClickListener(new View.OnClickListener() {
+        waterImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game1.setVisibility(View.GONE);
-                game2.setVisibility(View.GONE);
-                meow.updateThirst(15);
-                meow.ageUp((int)(currentTimeMillis() / 1000));
-                waterAnimation.stop();
-                waterAnimation.start();
-                animateCreature(waterImg.getX(), waterImg.getY());
-                drinking.start();
-
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
+                if(loaded) {
+                    myPet.updateThirst(15);
+                    myPet.ageUp((int) (currentTimeMillis() / 1000));
+                    waterAnimation.stop();
+                    waterAnimation.start();
+                    animateCreature(waterImg.getX(), waterImg.getY());
+                    drinkingSound.start();
+                    turnOffEverything();
+                    updateGame();
                 }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
             }
         });
-        play.setOnClickListener(new View.OnClickListener() {
+        playImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (loaded) {
 
-                game1.setVisibility(View.VISIBLE);
-                game2.setVisibility(View.VISIBLE);
+                    gameOneButton.setVisibility(View.VISIBLE);
+                    gameTwoButton.setVisibility(View.VISIBLE);
 
-                game1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        guessAttempts = 3;
-                        guessText.setVisibility(View.VISIBLE);
-                        guessText.setText("Guess a number (0-9)");
-                        numberGuessEdit.setVisibility(View.VISIBLE);
-                        guessButton.setVisibility(View.VISIBLE);
+                    gameOneButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            gameAttempts = 3;
+                            guessANumberText.setVisibility(View.VISIBLE);
+                            guessANumberText.setText(getString(R.string.guess_a_number));
+                            numberEditText.setVisibility(View.VISIBLE);
+                            submitButton.setVisibility(View.VISIBLE);
 
-                        random = 0 + (int)(Math.random() * (0 - 9) + 1);
-                        game1.setVisibility(View.GONE);
-                        game2.setVisibility(View.GONE);
-                        guessButton.setOnClickListener(new View.OnClickListener(){
-                            @Override
-                            public void onClick(View v){
-                                int guessInt = Integer.parseInt(numberGuessEdit.getText().toString());
-                                if(guessInt == random){
-                                    meow.play();
-                                    guessAttempts = 0;
-                                    correctToast.show();
-                                } else {
-                                    guessAttempts--;
-                                    numberGuessEdit.getText().clear();
-                                    nopeToast.show();
-                                }
-                                if(guessAttempts == 0 || guessAttempts == 3){
-                                    view = getCurrentFocus();
-                                    if (view != null) {
-                                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            random = 0 + (int) (Math.random() * (0 - 4) + 1);
+                            gameOneButton.setVisibility(View.GONE);
+                            gameTwoButton.setVisibility(View.GONE);
+                            submitButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int guessInt = Integer.parseInt(numberEditText.getText().toString());
+                                    if (guessInt == random) {
+                                        myPet.play();
+                                        gameAttempts = 0;
+                                        correctToast.show();
+                                    } else {
+                                        gameAttempts--;
+                                        numberEditText.getText().clear();
+                                        nopeToast.show();
                                     }
-                                    guessText.setVisibility(View.GONE);
-                                    numberGuessEdit.setVisibility(View.GONE);
-                                    guessButton.setVisibility(View.GONE);
-                                    if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                                        eventToast = Toast.makeText(context, eventText, eventDuration);
-                                        eventToast.show();
+                                    if (gameAttempts == 0 || gameAttempts == 3) {
+                                        view = getCurrentFocus();
+                                        if (view != null) {
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                        }
+                                        guessANumberText.setVisibility(View.GONE);
+                                        numberEditText.setVisibility(View.GONE);
+                                        submitButton.setVisibility(View.GONE);
+                                        updateGame();
                                     }
-                                    handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                                    save(meow);
                                 }
-                            }
-                        });
-                    }
-                });
-                game2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        game1.setVisibility(View.GONE);
-                        game2.setVisibility(View.GONE);
-                        // Words for hangman
-                        words = new ArrayList<>();
-                        words.add("apple"); words.add("butter"); words.add("cat"); words.add("dog"); words.add("elephant"); words.add("future");
-                        words.add("ghost"); words.add("history"); words.add("icing"); words.add("jump"); words.add("kill"); words.add("little");
-                        words.add("moth"); words.add("naughty"); words.add("octopus"); words.add("peanut"); words.add("quit"); words.add("race");
-                        words.add("simple"); words.add("terrible"); words.add("unbeatable"); words.add("very"); words.add("wild");
-                        words.add("xenoblast"); words.add("yoda"); words.add("zap");
-
-                        // Words that were obfuscated
-                        lettersHidden = new ArrayList<>();
-
-                        // Letters Guessed
-                        guessedLettersArr = new ArrayList<>();
-
-                        // Picking a random word from words
-                        random = abs((int) (Math.random() * words.size()) - 1);
-                        word = words.get(random);
-
-                        // Finding letters to obfuscate
-                        for(int i = 0; i < 3; i++){
-                            int rando = abs((int) (Math.random() * word.length()) - 1);
-                            Character randomLetter = word.charAt(rando);
-                            if(!lettersHidden.contains(randomLetter)){
-                                lettersHidden.add(randomLetter);
-                            }
+                            });
                         }
+                    });
+                    gameTwoButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alreadyGuessedLettersText.setText("");
+                            gameOneButton.setVisibility(View.GONE);
+                            gameTwoButton.setVisibility(View.GONE);
+                            // Words for hangman
+                            words = new ArrayList<>();
+                            words.add("apple");
+                            words.add("butter");
+                            words.add("cat");
+                            words.add("dog");
+                            words.add("elephant");
+                            words.add("future");
+                            words.add("ghost");
+                            words.add("history");
+                            words.add("icing");
+                            words.add("jump");
+                            words.add("kill");
+                            words.add("little");
+                            words.add("moth");
+                            words.add("naughty");
+                            words.add("octopus");
+                            words.add("peanut");
+                            words.add("quit");
+                            words.add("race");
+                            words.add("simple");
+                            words.add("terrible");
+                            words.add("unbeatable");
+                            words.add("very");
+                            words.add("wild");
+                            words.add("xenoblast");
+                            words.add("yoda");
+                            words.add("zap");
 
-                        guessButton2.setVisibility(View.VISIBLE);
-                        charGuessEdit.setVisibility(View.VISIBLE);
-                        guessText.setVisibility(View.VISIBLE);
-                        guessText.setText("Guess a letter!");
+                            // Words that were obfuscated
+                            lettersHidden = new ArrayList<>();
 
-                        // Creating an obfuscated word... obfuscate.
-                        hidden = wordChange(word, lettersHidden);
+                            // Letters Guessed
+                            guessedLettersArr = new ArrayList<>();
 
-                        guessedLetters.setVisibility(View.VISIBLE);
-                        hiddenText.setVisibility(View.VISIBLE);
-                        hiddenText.setText(hidden);
-                        attempts = 6;
+                            // Picking a random word from words
+                            random = abs((int) (Math.random() * words.size()) - 1);
+                            word = words.get(random);
 
-                        guessButton2.setOnClickListener(new View.OnClickListener(){
-                            @Override
-                            public void onClick(View v){
-                                if(charGuessEdit.getText().length() > 0)
-                                    guess = charGuessEdit.getText().charAt(0);
-                                else
-                                    guess = ' ';
-
-                                charGuessEdit.getText().clear();
-                                if(lettersHidden.contains(guess)) {
-                                    lettersHidden.remove(guess);
-                                    hidden = wordChange(word, lettersHidden);
-                                    hiddenText.setText(hidden);
-                                    correctToast.show();
-                                } else {
-                                    guessedLettersArr.add(guess);
-                                    attempts--;
-                                    nopeToast.show();
-                                }
-
-                                guessedLetters.setText(wrongGuesses(guessedLettersArr));
-
-                                if(lettersHidden.isEmpty() || lettersHidden.size() == 0){
-                                    view = getCurrentFocus();
-                                    if (view != null) {
-                                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                    }
-                                    guessedLetters.setVisibility(View.GONE);
-                                    lettersHidden.removeAll(lettersHidden);
-                                    guessedLettersArr.removeAll(guessedLettersArr);
-                                    meow.play();
-                                    correctToast.show();
-                                    guessText.setVisibility(View.GONE);
-                                    charGuessEdit.setVisibility(View.GONE);
-                                    guessButton2.setVisibility(View.GONE);
-                                    hiddenText.setVisibility(View.GONE);
-                                    if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                                        eventToast = Toast.makeText(context, eventText, eventDuration);
-                                        eventToast.show();
-                                    }
-                                    handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                                    save(meow);
-                                    guessedLettersArr.clear();
-                                } else if(attempts == 0){
-                                    view = getCurrentFocus();
-                                    if (view != null) {
-                                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                                    }
-                                    guessedLetters.setVisibility(View.GONE);
-                                    lettersHidden.removeAll(lettersHidden);
-                                    guessedLettersArr.removeAll(guessedLettersArr);
-                                    guessedLetters.setVisibility(View.GONE);
-                                    nopeToast.show();
-                                    guessText.setVisibility(View.GONE);
-                                    charGuessEdit.setVisibility(View.GONE);
-                                    guessButton2.setVisibility(View.GONE);
-                                    hiddenText.setVisibility(View.GONE);
-                                    guessedLetters.setVisibility(View.GONE);
-                                    if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                                        eventToast = Toast.makeText(context, eventText, eventDuration);
-                                        eventToast.show();
-                                    }
-                                    handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                                    save(meow);
+                            // Finding letters to obfuscate
+                            for (int i = 0; i < 3; i++) {
+                                int rando = abs((int) (Math.random() * word.length()) - 1);
+                                Character randomLetter = word.charAt(rando);
+                                if (!lettersHidden.contains(randomLetter)) {
+                                    lettersHidden.add(randomLetter);
                                 }
                             }
-                        });
-                    }
-                });
 
-                meow.ageUp((int)(currentTimeMillis() / 1000));
+                            submitButton.setVisibility(View.VISIBLE);
+                            letterEditText.setVisibility(View.VISIBLE);
+                            guessALetterText.setVisibility(View.VISIBLE);
+                            guessALetterText.setText(getString(R.string.guess_a_letter));
 
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
+                            // Creating an obfuscated word... obfuscate.
+                            hiddenWordString = wordChange(word, lettersHidden);
+
+                            alreadyGuessedLettersText.setVisibility(View.VISIBLE);
+                            hiddenWordText.setVisibility(View.VISIBLE);
+                            hiddenWordText.setText(hiddenWordString);
+                            gameAttempts = 6;
+
+                            submitButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (letterEditText.getText().length() > 0)
+                                        characterGuess = letterEditText.getText().charAt(0);
+                                    else
+                                        characterGuess = ' ';
+
+                                    letterEditText.getText().clear();
+                                    if (lettersHidden.contains(characterGuess)) {
+                                        lettersHidden.remove(characterGuess);
+                                        hiddenWordString = wordChange(word, lettersHidden);
+                                        hiddenWordText.setText(hiddenWordString);
+                                        correctToast.show();
+                                    } else {
+                                        guessedLettersArr.add(characterGuess);
+                                        gameAttempts--;
+                                        nopeToast.show();
+                                    }
+
+                                    alreadyGuessedLettersText.setText(wrongGuesses(guessedLettersArr));
+
+                                    if (lettersHidden.isEmpty() || lettersHidden.size() == 0) {
+                                        view = getCurrentFocus();
+                                        if (view != null) {
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                        }
+                                        alreadyGuessedLettersText.setVisibility(View.GONE);
+                                        lettersHidden.removeAll(lettersHidden);
+                                        guessedLettersArr.removeAll(guessedLettersArr);
+                                        myPet.play();
+                                        correctToast.show();
+                                        guessALetterText.setVisibility(View.GONE);
+                                        letterEditText.setVisibility(View.GONE);
+                                        submitButton.setVisibility(View.GONE);
+                                        hiddenWordText.setVisibility(View.GONE);
+                                        updateGame();
+                                        guessedLettersArr.clear();
+                                    } else if (gameAttempts == 0) {
+                                        view = getCurrentFocus();
+                                        if (view != null) {
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                        }
+                                        alreadyGuessedLettersText.setVisibility(View.GONE);
+                                        lettersHidden.removeAll(lettersHidden);
+                                        Log.e("hmm", "ok");
+                                        guessedLettersArr.removeAll(guessedLettersArr);
+                                        nopeToast.show();
+                                        guessALetterText.setVisibility(View.GONE);
+                                        letterEditText.setVisibility(View.GONE);
+                                        submitButton.setVisibility(View.GONE);
+                                        hiddenWordText.setVisibility(View.GONE);
+                                        updateGame();
+                                        guessedLettersArr.clear();
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    updateGame();
+                    animateCreature();
                 }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
-                animateCreature();
             }
         });
-        punish.setOnClickListener(new View.OnClickListener() {
+        punishImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game1.setVisibility(View.GONE);
-                game2.setVisibility(View.GONE);
-                meow.updateHealth(-10);
-                meow.updateHappy(-10);
-                meow.updateRandomEvent();
-                meow.ageUp((int)(currentTimeMillis() / 1000));
-
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
+                if(loaded) {
+                    myPet.updateHealth(-10);
+                    myPet.updateHappy(-10);
+                    myPet.updateRandomEvent();
+                    turnOffEverything();
+                    updateGame();
+                    animateCreature();
                 }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
-                animateCreature();
             }
         });
-        shot.setOnClickListener(new View.OnClickListener() {
+        shotImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game1.setVisibility(View.GONE);
-                game2.setVisibility(View.GONE);
-                meow.giveShot();
-                meow.ageUp((int)(currentTimeMillis() / 1000));
-
-                if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                    eventToast = Toast.makeText(context, eventText, eventDuration);
-                    eventToast.show();
+                if(loaded){
+                    myPet.giveShot();
+                    turnOffEverything();
+                    updateGame();
+                    animateCreature();
                 }
-                handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                save(meow);
-                animateCreature();
             }
         });
     }
     @Override
      public void onPause() {
         super.onPause();
-        save(meow);
+        save();
     }
     @Override
     protected void onResume()
     {
         super.onResume();
         timeKeeper = (int)(currentTimeMillis() / 1000);
-        meow.updateAwayTime(timeKeeper);
-        save(meow);
-        ageText.setText(String.valueOf(meow.getAge()));
-        feedText.setText(String.valueOf(meow.getHunger()));
-        waterText.setText(String.valueOf(meow.getThirst()));
-        happyText.setText(String.valueOf(meow.getHappy()));
-        healthText.setText(String.valueOf(meow.gethealth()));
-        deathText.setText(String.valueOf(meow.getDeath()));
+        myPet.updateAwayTime(timeKeeper);
+        save();
+        updateText();
     }
+
     // Updating Text
-    public boolean updateText(Pet meow, TextView deadPet, TextView age, TextView feed,
-                           TextView water, TextView happy, TextView health, TextView death){
-        int percentage = meow.getRandomEvent();
+    private boolean updateText(){
+        ageIntText.setText(String.valueOf(myPet.getAge()));
+        hungerIntText.setText(String.valueOf(myPet.getHunger()));
+        waterIntText.setText(String.valueOf(myPet.getThirst()));
+        happyIntText.setText(String.valueOf(myPet.getHappy()));
+        healthIntText.setText(String.valueOf(myPet.gethealth()));
+        deathIntText.setText(String.valueOf(myPet.getDeath()));
+        int percentage = myPet.getRandomEvent();
         int randomEv = abs((int) (Math.random() * 100) + 1);
         if(randomEv <= percentage){
-            eventText = meow.randomEvent();
-            deadPet.setVisibility(View.GONE);
-            age.setText(String.valueOf(meow.getAge()));
-            feed.setText(String.valueOf(meow.getHunger()));
-            water.setText(String.valueOf(meow.getThirst()));
-            happy.setText(String.valueOf(meow.getHappy()));
-            health.setText(String.valueOf(meow.gethealth()));
-            death.setText(String.valueOf(meow.getDeath()));
+            eventText = myPet.randomEvent();
             return true;
         }
-        deadPet.setVisibility(View.GONE);
-        age.setText(String.valueOf(meow.getAge()));
-        feed.setText(String.valueOf(meow.getHunger()));
-        water.setText(String.valueOf(meow.getThirst()));
-        happy.setText(String.valueOf(meow.getHappy()));
-        health.setText(String.valueOf(meow.gethealth()));
-        death.setText(String.valueOf(meow.getDeath()));
         return false;
     }
 
+    // Update Game
+    private void updateGame(){
+        myPet.ageUp((int)(currentTimeMillis() / 1000));
+        if(updateText()){
+            eventToast = Toast.makeText(context, eventText, LONGduration);
+            eventToast.show();
+        }
+        handlingDeath();
+        save();
+    }
+
     // Save pet
-    public void save(Pet meow){
-        String petInfo = meow.getName() + " " + String.valueOf(meow.getAge()) + " " + String.valueOf(meow.getHunger()) + " " +
-                String.valueOf(meow.getThirst()) + " " + String.valueOf(meow.gethealth()) + " " + String.valueOf(meow.getDeath()) + " " +
-                String.valueOf(meow.gethealth()) + " " + String.valueOf(meow.getAgeTime()) + " " +
-                String.valueOf((int)(currentTimeMillis() / 1000) + " " + meow.getRandomEvent() + " " + meow.getCreature());
+    private void save(){
+        String petInfo = myPet.getName() + " " + String.valueOf(myPet.getAge()) + " " + String.valueOf(myPet.getHunger()) + " " +
+                String.valueOf(myPet.getThirst()) + " " + String.valueOf(myPet.gethealth()) + " " + String.valueOf(myPet.getDeath()) + " " +
+                String.valueOf(myPet.gethealth()) + " " + String.valueOf(myPet.getAgeTime()) + " " +
+                String.valueOf((int)(currentTimeMillis() / 1000) + " " + myPet.getRandomEvent() + " " + myPet.getCreature());
 
         FileOutputStream outputStream;
         try{
-            outputStream = openFileOutput(meow.getName() + ".pet", Context.MODE_PRIVATE);
+            outputStream = openFileOutput(myPet.getName() + ".pet", Context.MODE_PRIVATE);
             outputStream.write(petInfo.getBytes());
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     // Handling Death
-    public void handlingDeath(Pet meow, TextView deadPet, TextView newPet, TextView oldPet, Button nameButt, EditText mEdit){
-        if(meow.isDead()){
-            deadPet.setVisibility(View.VISIBLE);
-            newPet.setVisibility(View.VISIBLE);
-            oldPet.setVisibility(View.VISIBLE);
-            deadPet.setVisibility(View.VISIBLE);
-            newPet.setVisibility(View.VISIBLE);
-            oldPet.setVisibility(View.VISIBLE);
-            mEdit.setVisibility(View.VISIBLE);
-            nameButt.setVisibility(View.VISIBLE);
-            newPetText.setVisibility(View.VISIBLE);
-            oldPetText.setVisibility(View.VISIBLE);
+    private void handlingDeath(){
+        if(myPet.isDead()){
+            deadPetText.setVisibility(View.VISIBLE);
+            openOldPetButton.setVisibility(View.VISIBLE);
+            createNewPetButton.setVisibility(View.VISIBLE);
         }
     }
-    public String wordChange(String s, ArrayList<Character> a){
+    private String wordChange(String s, ArrayList<Character> a){
         String hidden = s;
         for(int i = 0; i < a.size(); i++){
             hidden = hidden.replace(a.get(i), '_');
@@ -781,7 +794,7 @@ public class MainActivity extends AppCompatActivity {
         return hidden;
     }
 
-    public String wrongGuesses(ArrayList<Character> a){
+    private String wrongGuesses(ArrayList<Character> a){
         String guesses = "";
         for(int i = 0; i < a.size(); i++){
             guesses += a.get(i);
@@ -789,11 +802,7 @@ public class MainActivity extends AppCompatActivity {
         return guesses;
     }
 
-    public void resetAnimations(){
-
-    }
-
-    public void animateCreature(){
+    private void animateCreature(){
         int randomX = ThreadLocalRandom.current().nextInt(300, width - 300);
         int randomY = ThreadLocalRandom.current().nextInt(300, height - 300);
         creatureAnimator = ObjectAnimator.ofFloat(creatureImage, "translationX", randomX);
@@ -803,7 +812,8 @@ public class MainActivity extends AppCompatActivity {
         creatureAnimator.setDuration(2000);
         creatureAnimator.start();
     }
-    public void animateCreature(float newX, float newY){
+
+    private void animateCreature(float newX, float newY){
         creatureAnimator = ObjectAnimator.ofFloat(creatureImage, "translationX", newX - 50);
         creatureAnimator.setDuration(2000);
         creatureAnimator.start();
@@ -812,7 +822,7 @@ public class MainActivity extends AppCompatActivity {
         creatureAnimator.start();
     }
 
-    public void choosePet(){
+    private void choosePet(){
         File path = getFilesDir();
         File[] files = path.listFiles();
         linearLayout.removeAllViewsInLayout();
@@ -844,27 +854,23 @@ public class MainActivity extends AppCompatActivity {
                                 words = line.split(" ");
                             }
                             br.close();
-                            meow = new Pet(words[0], Integer.parseInt(words[1]), Integer.parseInt(words[2]), Integer.parseInt(words[3]),
+                            myPet = new Pet(words[0], Integer.parseInt(words[1]), Integer.parseInt(words[2]), Integer.parseInt(words[3]),
                                     Integer.parseInt(words[4]), Integer.parseInt(words[5]), Integer.parseInt(words[6]),
                                     Integer.parseInt(words[7]), Integer.parseInt(words[8]), Integer.parseInt(words[9]), words[10]);
-                            meow.updateAwayTime((int)(currentTimeMillis() / 1000));
+                            myPet.updateAwayTime((int)(currentTimeMillis() / 1000));
                             resourceID = getResources().getIdentifier(words[10], "drawable", getPackageName());
 
                             creatureImage.setBackgroundResource(resourceID);
                             creatureImage.setVisibility(View.VISIBLE);
 
-                            if(updateText(meow, deadPetText, ageText, feedText, waterText, happyText, healthText, deathText)){
-                                eventToast = Toast.makeText(context, eventText, eventDuration);
-                                eventToast.show();
-                            }
-                            handlingDeath(meow, deadPetText, newPetText, oldPetText, nameButton, petNameEdit);
-                            save(meow);
-                            petNameEdit.setVisibility(View.GONE);
-                            nameButton.setVisibility(View.GONE);
-                            newPetText.setVisibility(View.GONE);
-                            oldPetText.setVisibility(View.GONE);
+                            updateGame();
+                            save();
+                            loaded = true;
+
+                            openOldPetButton.setVisibility(View.GONE);
+                            createNewPetButton.setVisibility(View.GONE);
                             linearLayout.removeAllViewsInLayout();
-                            creatureName.setText(meow.getName().replace("_", " "));
+                            loadedPetNameText.setText(myPet.getName().replace("_", " "));
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -876,6 +882,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    // On Touch listener
     private View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
         @Override
@@ -895,7 +903,8 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void settings(){
+    // Settings page
+    private void settings(){
         // Settings file
         File path = getFilesDir();
         File[] files = path.listFiles();
@@ -907,7 +916,7 @@ public class MainActivity extends AppCompatActivity {
                     BufferedReader br = new BufferedReader(new InputStreamReader(new BufferedInputStream(settingsFile)));
                     String line;
                     while ((line = br.readLine()) != null) {
-                        soundornot = Boolean .parseBoolean(line);
+                        soundORnot = Boolean .parseBoolean(line);
                     }
                     br.close();
                 } catch (Exception e){
@@ -921,32 +930,54 @@ public class MainActivity extends AppCompatActivity {
                     outputStream = openFileOutput("settings", Context.MODE_PRIVATE);
                     outputStream.write("true".getBytes());
                     outputStream.close();
-                    catpurr.setVolume(1.0f,1.0f);
-                    drinking.setVolume(0.4f,0.4f);
-                    eating.setVolume(0.4f,0.4f);
+                    soundORnot = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
+        changeSound();
+    }
 
-        // Sounds //
-        catpurr = MediaPlayer.create(this, R.raw.purr);
-        drinking = MediaPlayer.create(this, R.raw.drinking);
-        eating = MediaPlayer.create(this, R.raw.eating);
-        musicOffImg = (ImageView)findViewById(R.id.nomusicBUTT);
-        musicOnImg = (ImageView)findViewById(R.id.musicBUTT);
-
-        if(!soundornot){
-            catpurr.setVolume(0.0f,0.0f);
-            drinking.setVolume(0.0f,0.0f);
-            eating.setVolume(0.0f,0.0f);
-            musicOnImg.setVisibility(View.GONE);
-            musicOffImg.setVisibility(View.VISIBLE);
+    // Sound handler
+    private void changeSound(){
+        if(soundORnot) {
+            catpurrSound.setVolume(1.0f,1.0f);
+            drinkingSound.setVolume(0.4f,0.4f);
+            eatingSound.setVolume(0.4f,0.4f);
+            soundImageButton.setBackgroundResource(R.drawable.musicbutton);
+            FileOutputStream outputStream;
+            try{
+                outputStream = openFileOutput("settings", Context.MODE_PRIVATE);
+                outputStream.write("true".getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            soundORnot = false;
         } else {
-            catpurr.setVolume(1.0f,1.0f);
-            drinking.setVolume(0.4f,0.4f);
-            eating.setVolume(0.4f,0.4f);
+            catpurrSound.setVolume(0.0f,0.0f);
+            drinkingSound.setVolume(0.0f,0.0f);
+            eatingSound.setVolume(0.0f,0.0f);
+            soundImageButton.setBackgroundResource(R.drawable.nomusicbutton);
+            FileOutputStream outputStream;
+            try{
+                outputStream = openFileOutput("settings", Context.MODE_PRIVATE);
+                outputStream.write("false".getBytes());
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            soundORnot = true;
         }
+    }
+
+    private void turnOffEverything(){
+        gameOneButton.setVisibility(View.GONE);
+        gameTwoButton.setVisibility(View.GONE);
+        nameYourNewPetText.setVisibility(View.GONE);
+        nameEditText.setVisibility(View.GONE);
+        submitButton.setVisibility(View.GONE);
+        nameYourNewPetText.setVisibility(View.GONE);
     }
 }

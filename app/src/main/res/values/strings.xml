@@ -1,3 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TamaPet</string>
+    <string name="loadedpetname">TamaPet</string>
+    <string name="create_a_new_pet">Create a new pet?</string>
+    <string name="open_a_pet_already_created">Open a pet already created?</string>
+    <string name="name_your_new_pet">Name your new pet!</string>
+    <string name="age">Age</string>
+    <string name="hunger">Hunger</string>
+    <string name="water">Water</string>
+    <string name="happy">Happy</string>
+    <string name="health">Health</string>
+    <string name="death">Death</string>
+    <string name="pet_name">Pet name</string>
+    <string name="submit">Submit</string>
+    <string name="game_1">Game 1</string>
+    <string name="game_2">Game 2</string>
+    <string name="guess_a_number">Guess a number (0–4)</string>
+    <string name="you_get_2_tries">You get 2 tries</string>
+    <string name="guess_a_letter">Guess a letter</string>
+    <string name="nope">Nope!</string>
+    <string name="correct">Correct!</string>
+    <string name="your_pet_died">Your pet died :(</string>
+    <string name="scenario_01"> fell down some stairs! They hurt them selves and
+        feel dumb… happiness (–10) and health (–15).</string>
+    <string name="scenario_02"> received mysterious roses! ♥ ♥ ♥ happiness (+15)</string>
+    <string name="scenario_03"> was picked on today and feels bad… happiness (–10)</string>
+    <string name="scenario_04"> got in a fight with another pet! happiness (-10) and health (-15)</string>
+    <string name="scenario_05"> almost got whacked in the head with a ball. While trying to
+        avoid the ball they fell over into grass. This was on top of a steep hill and then
+        tumbled over and over down the hill. happiness(-10)</string>
+    <string name="scenario_06"> found a cheetoh on the ground and ate it. hunger (+2) health (-2)</string>
+    <string name="scenario_07"> made a new friend!! ♥ ♥ happiness (+20)</string>
+    <string name="scenario_08"> absolutely and completely destroyed your home. happiness (-15)</string>
+    <string name="scenario_09"> was found outside chomping on all the bugs they could find.
+        Is that a squirrel tail? health (-15)</string>
+    <string name="scenario_10"> stole candy from the corner store! happiness (-15) and health (-10)</string>
+    <string name="scenario_11"> said really mean things that were totally uncalled for! happiness (-10)</string>
+    <string name="scenario_12"> was visited by a Shinigami. Coolness (+100) but that\'s not a stat so…</string>
+    <string name="scenario_13"> stubbed their toe. Ouch! health (-2)</string>
+    <string name="scenario_14"> got lost on their way to school… happy (-5)</string>
+    <string name="scenario_15"> tried to make a cake and got flower and chocolate everywhere! happy (+5)</string>
+    <string name="scenario_16"> tried to learn something new but failed :( happy (-5)</string>
+    <string name="scenario_17"> succeeded at learning something new!! happy (+10)</string>
+    <string name="scenario_18"> tried to hack the pentagon but failed… happy (-20)</string>
+    <string name="scenario_19"> tried to teach them self binary exploitation. That\'s hard! happy (+10)</string>
+    <string name="scenario_20"> went for a walk in the park with the sun shining. happy (+10)</string>
+    <string name="scenario_21"> went for a walk in the park in the rain! happy (+20)</string>
+    <string name="scenario_22"> ate worms because nobody likes them. happy (-20) and health (-20)</string>
 </resources>
