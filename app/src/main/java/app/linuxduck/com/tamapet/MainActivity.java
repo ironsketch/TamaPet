@@ -458,6 +458,7 @@ public class MainActivity extends AppCompatActivity {
                         updateGame();
 
                         loadedPetNameText.setText(myPet.getName().replace("_", " "));
+                        loadedPetNameText.setVisibility(View.VISIBLE);
                         view = getCurrentFocus();
                         nameYourNewPetText.setVisibility(View.GONE);
                     }
@@ -908,6 +909,7 @@ public class MainActivity extends AppCompatActivity {
                             linearLayout.setVisibility(View.GONE);
                             linearLayout.removeAllViewsInLayout();
                             loadedPetNameText.setText(myPet.getName().replace("_", " "));
+                            loadedPetNameText.setVisibility(View.VISIBLE);
                         } catch (Exception e){
                             e.printStackTrace();
                         }
