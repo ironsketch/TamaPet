@@ -12,7 +12,26 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/creatureimageview"/>
+        android:id="@+id/butteranimation"
+        android:layout_marginLeft="20sp"
+        android:background="@drawable/butter01"
+        android:layout_centerVertical="true"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/food1"
+        android:layout_marginRight="20sp"
+        android:layout_marginLeft="20sp"
+        android:layout_above="@id/bottomstuff"
+        android:id="@+id/foodbowl"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/water1"
+        android:layout_toEndOf="@id/foodbowl"
+        android:layout_toRightOf="@id/foodbowl"
+        android:layout_above="@id/bottomstuff"
+        android:id="@+id/waterbowl"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +44,7 @@
         android:id="@+id/ball"
         android:visibility="gone"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="50sp"
+        android:layout_marginLeft="100sp"
         android:layout_centerInParent="true"
         android:background="@drawable/ball"/>
     <ImageView
@@ -38,6 +57,10 @@
         android:layout_marginLeft="50sp"
         android:layout_centerInParent="true"
         android:background="@drawable/feather"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/creatureimageview"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -201,25 +224,29 @@
         android:orientation="vertical"
         android:paddingTop="90sp"
         android:gravity="center|top">
+
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/genericbutton"
-                android:visibility="gone"
                 android:id="@+id/gameonebutton"
-                android:textColor="@color/white"
-                android:text="@string/game_1" />
-            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/genericbutton"
-                android:visibility="gone"
-                android:id="@+id/gametwobutton"
+                android:text="@string/game_1"
                 android:textColor="@color/white"
-                android:text="@string/game_2" />
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/gametwobutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/genericbutton"
+                android:text="@string/game_2"
+                android:textColor="@color/white"
+                android:visibility="gone" />
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
@@ -243,22 +270,6 @@
             android:textColor="@color/black">
             <requestFocus />
         </EditText>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/linearlayoutlistofpets"
-            android:orientation="vertical"
-            android:gravity="center|top">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:background="@drawable/genericbutton"
-                android:paddingLeft="30sp"
-                android:paddingRight="30sp"
-                android:visibility="gone"
-                android:id="@+id/listofpets"/>
-        </LinearLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -286,6 +297,29 @@
             android:paddingTop="10sp"
             android:textStyle="bold"
             android:text="@string/your_pet_died"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearlayoutlistofpets"
+            android:orientation="vertical"
+            android:gravity="center|top">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:background="@drawable/genericbutton"
+                android:paddingLeft="30sp"
+                android:paddingRight="30sp"
+                android:visibility="gone"
+                android:id="@+id/listofpets"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:id="@+id/deletebutton"
+                android:visibility="gone"
+                android:background="@drawable/deletebutton" />
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -397,22 +431,6 @@
             android:layout_gravity="right"
             android:background="@drawable/savedcreaturesbutton"/>
     </LinearLayout>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/food1"
-        android:layout_marginRight="20sp"
-        android:layout_marginLeft="20sp"
-        android:layout_above="@id/bottomstuff"
-        android:id="@+id/foodbowl"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/water1"
-        android:layout_toEndOf="@id/foodbowl"
-        android:layout_toRightOf="@id/foodbowl"
-        android:layout_above="@id/bottomstuff"
-        android:id="@+id/waterbowl"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

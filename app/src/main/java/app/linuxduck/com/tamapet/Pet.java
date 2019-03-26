@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import static java.lang.Math.abs;
 
 public class Pet {
-    private static final int DEATH_COST = 2;
     private static final int SHOT_COST = 100;
     private String name;
     private int age;
@@ -18,10 +17,10 @@ public class Pet {
     private int happy;
     private int ageTime;
     private int awayTime;
+    private int randomEvent;
+    private int randomEventPercentage;
     private String creature;
     private ArrayList<String> events;
-
-    private int randomEvent;
 
     public String getName(){return name;}
     public int getAge(){return age;}
@@ -31,13 +30,13 @@ public class Pet {
     public int gethealth(){return health;}
     public int getDeath(){return death;}
     public int getHappy(){return happy;}
-    public int getRandomEvent(){return randomEvent;}
+    public int getRandomEvent(){return randomEventPercentage;}
     public String getCreature(){return creature;}
 
     public Pet(){}
 
     public Pet(String newName, int newAge, int newHunger, int newThirst, int newHealth,
-               int newDeath, int newHappy, int newAgeTime, int newAwayTime, int newRandomEvent, String newCreature){
+               int newDeath, int newHappy, int newAgeTime, int newAwayTime, int newRandomEventPercentage, String newCreature){
         name = newName;
         age = newAge;
         hunger = newHunger;
@@ -47,7 +46,7 @@ public class Pet {
         happy = newHappy;
         ageTime = newAgeTime;
         awayTime = newAwayTime;
-        randomEvent = newRandomEvent;
+        randomEventPercentage = newRandomEventPercentage;
         events = new ArrayList<>();
         creature = newCreature;
 
@@ -123,7 +122,10 @@ public class Pet {
 
     }
     public void updateRandomEvent(){
-        randomEvent--;
+        randomEventPercentage--;
+        if(randomEventPercentage <= 0){
+            randomEventPercentage = 0;
+        }
     }
     public void updateHunger(int calories, boolean treat){
         if(hunger + calories > 100) {
@@ -131,12 +133,12 @@ public class Pet {
         }
         else if(hunger + calories <= 0){
             hunger = 0;
-            updateHealth(-2);
+            updateHealth(calories);
         }
         else{
             if(treat){
                 hunger += calories;
-                updateHappy(5);
+                updateHappy(5, false);
                 updateHealth(-2);
             }
             else{
@@ -150,7 +152,7 @@ public class Pet {
             thirst = 100;
         else if(thirst + water <= 0) {
             thirst = 0;
-            updateHealth(-2);
+            updateHealth(water);
         }
         else
             thirst += water;
@@ -160,29 +162,14 @@ public class Pet {
         if(health + heal > 100)
             health = 100;
         else if(health + heal <= 0) {
-            if(heal < 0){
-                updateDeath(heal);
-                Log.e("health","update");
-            } else {
-                updateDeath();
-            }
+            updateDeath(heal);
             health = 0;
         }
         else
             health += heal;
     }
-
-    public void updateDeath(){
-        if(death + DEATH_COST > 100) {
-            death = 100;
-        }
-        else if(death + DEATH_COST <= 0){
-            death = 0;
-        } else {
-            death += DEATH_COST;
-        }
-    }
     public void updateDeath(int major){
+        major = abs(major);
         if(death + major > 100) {
             death = 100;
         }
@@ -193,15 +180,12 @@ public class Pet {
         }
     }
 
-    public void updateHappy(int gameCost){
+    public void updateHappy(int gameCost, boolean isShot){
         if(happy + gameCost > 100){
             happy = 100;
         } else if(happy + gameCost <= 0){
-            if(gameCost < 0){
+            if(!isShot)
                 updateHealth(-(abs(happy + gameCost)));
-            } else {
-                updateHealth(-2);
-            }
             happy = 0;
         } else {
             happy += gameCost;
@@ -210,16 +194,16 @@ public class Pet {
 
     public void giveShot(){
         updateHealth(SHOT_COST);
-        updateHappy(-60);
+        updateHappy(-60, true);
     }
 
     public void updateAwayTime(int time){
         // 15 minutes
         if((time - awayTime) / 900 > 0){
-            int hoursAway = (time - awayTime) / 150;//900;
+            int hoursAway = (time - awayTime) / 900;
             updateHunger(-hoursAway, false);
             updateThirst(-hoursAway);
-            updateHappy(-hoursAway);
+            updateHappy(-hoursAway, false);
         }
         awayTime = time;
     }
@@ -240,57 +224,57 @@ public class Pet {
     }
 
     public void play(){
-        updateHappy(20);
+        updateHappy(20, false);
     }
 
     public String randomEvent(){
         randomEvent = abs((int) (Math.random() * events.size()) - 1);
         if(randomEvent == 0){
-            updateHappy(-10);
+            updateHappy(-10, false);
             updateHealth(-15);
         } else if(randomEvent == 1){
-            updateHappy(15);
+            updateHappy(15, false);
         } else if(randomEvent == 2){
-            updateHappy(-10);
+            updateHappy(-10, false);
         } else if(randomEvent == 3){
-            updateHappy(-10);
+            updateHappy(-10, false);
             updateHealth(-15);
         } else if(randomEvent == 4){
-            updateHappy(-10);
+            updateHappy(-10, false);
         } else if(randomEvent == 5){
             updateHunger(2, false);
             updateHealth(-2);
         } else if(randomEvent == 6){
-            updateHappy(20);
+            updateHappy(20, false);
         } else if(randomEvent == 7){
-            updateHappy(-15);
+            updateHappy(-15, false);
         } else if(randomEvent == 8){
             updateHealth(-15);
         } else if(randomEvent == 9){
-            updateHappy(-15);
+            updateHappy(-15, false);
             updateHealth(-10);
         } else if(randomEvent == 10){
-            updateHappy(-10);
+            updateHappy(-10, false);
         } else if(randomEvent == 12){
             updateHealth(-2);
         } else if(randomEvent == 13){
-            updateHappy(-5);
+            updateHappy(-5, false);
         } else if(randomEvent == 14){
-            updateHappy(5);
+            updateHappy(5, false);
         } else if(randomEvent == 15){
-            updateHappy(-5);
+            updateHappy(-5, false);
         } else if(randomEvent == 16){
-            updateHappy(10);
+            updateHappy(10, false);
         } else if(randomEvent == 17){
-            updateHappy(-20);
+            updateHappy(-20, false);
         } else if(randomEvent == 18){
-            updateHappy(10);
+            updateHappy(10, false);
         } else if(randomEvent == 19){
-            updateHappy(10);
+            updateHappy(10, false);
         } else if(randomEvent == 20){
-            updateHappy(20);
+            updateHappy(20, false);
         } else if(randomEvent == 21){
-            updateHappy(-20);
+            updateHappy(-20, false);
             updateHealth(-20);
         }
         return events.get(randomEvent);

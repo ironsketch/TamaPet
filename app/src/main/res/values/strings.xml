@@ -20,7 +20,7 @@
     <string name="guess_a_letter">Guess a letter</string>
     <string name="nope">Nope!</string>
     <string name="correct">Correct!</string>
-    <string name="your_pet_died">Your pet died :(</string>
+    <string name="your_pet_died">Your pet died :( ASPCA has been called.</string>
     <string name="scenario_01"> fell down some stairs! They hurt them selves and
         feel dumb… happiness (–10) and health (–15).</string>
     <string name="scenario_02"> received mysterious roses! ♥ ♥ ♥ happiness (+15)</string>
