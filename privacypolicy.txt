@@ -1,0 +1,1 @@
+I use android.permission.GET_ACCOUNTS for getting folders. At least online it said I need that. I use that to store the pet files that you save and a settings file. I do not take or share or anything! This is a simple cute app. I do not sell or use data in anyway. Mostly just my friends and family will use this app. Have pity on me.
