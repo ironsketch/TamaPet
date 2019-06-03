@@ -76,20 +76,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/age"
                 android:id="@+id/agetext"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/ageinttext"/>
         </LinearLayout>
         <LinearLayout
@@ -101,20 +101,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/hunger"
                 android:id="@+id/hungertext"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/hungerinttext"/>
         </LinearLayout>
         <LinearLayout
@@ -126,20 +126,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/water"
                 android:id="@+id/watertext"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/waterinttext"/>
         </LinearLayout>
         <LinearLayout
@@ -151,20 +151,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/happy"
                 android:id="@+id/happytext"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/happyinttext"/>
         </LinearLayout>
         <LinearLayout
@@ -176,20 +176,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/health"
                 android:id="@+id/healthtext"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/healthinttext"/>
         </LinearLayout>
         <LinearLayout
@@ -201,20 +201,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/death"
                 android:id="@+id/deathtext"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingLeft="7sp"
-                android:paddingRight="7sp"
+                android:paddingLeft="2sp"
+                android:paddingRight="2sp"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:id="@+id/deathinttext"/>
         </LinearLayout>
     </LinearLayout>

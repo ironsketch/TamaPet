@@ -716,9 +716,9 @@ public class MainActivity extends AppCompatActivity {
                             });
                         }
                     });
+                    updateGame();
+                    animateCreature();
                 }
-                updateGame();
-                animateCreature();
             }
         });
 
@@ -981,9 +981,9 @@ public class MainActivity extends AppCompatActivity {
                         soundORnot = Boolean .parseBoolean(line);
                     }
                     br.close();
-                } catch (Exception e){
-                }
+                } catch (Exception e) {
 
+                }
                 //check settings
             } else {
                 // Create new settings
